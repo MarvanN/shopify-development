@@ -1,0 +1,60 @@
+<!-- WhatsApp Floating Button -->
+{% if section.settings.show-on-homepage == true %}
+    <a href="javascript:void(0);" class="whatsapp_float" onclick="openWhatsAppChat();">
+        <img src="{{ 'sparkle.gif' | asset_url }}" alt="WhatsApp" style="width: 60px; height: 60px;">
+      </a>
+  {% endif %}
+
+  <style>
+    .whatsapp_float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+  </style>
+
+  <script>
+    function openWhatsAppChat() {
+        const phoneNumber = '{{ section.settings.whatsapp-number }}';
+        const message = '{{ section.settings.whatsapp-message }}';
+        const encodedMessage = encodeURIComponent(message);
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+        let url;
+        if (isMobile) {
+          url = `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`;
+        } else {
+          url = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+        }
+    
+        window.open(url, '_blank');
+      }
+  </script>
+
+{% schema %}
+{
+  "name": "Whatsapp",
+  "class": "whatsapp-number-section",
+  "settings": [
+    {
+        "type": "checkbox",
+        "id": "show-on-homepage",
+        "default": false,
+        "label": "Only show on homepage"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp-number",
+      "default": "This is a number used to connect",
+      "label": "Number"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp-message",
+      "default": "Hello there! I need some assistance.",
+      "label": "Message"
+    }
+  ]
+}
+{% endschema %}

@@ -296,6 +296,8 @@
 
     {% sections 'header-group' %}
 
+    {% sections 'special-section' %}
+
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
@@ -355,5 +357,7 @@
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+
+    {% section 'whats-app-button' %}
   </body>
 </html>
