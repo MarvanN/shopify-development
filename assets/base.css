@@ -2902,6 +2902,29 @@ details-disclosure > details {
   word-break: break-word;
 }
 
+@keyframes shake {
+  0% {transform: rotate(0deg);}
+  10% {transform: rotate(-15deg);}
+  20% {transform: rotate(15deg);}
+  30% {transform: rotate(-7deg);}
+  40% {transform: rotate(7deg);}
+  50% {transform: rotate(0deg);}
+}
+
+.six-pack-badge::after {
+  position:absolute;
+  content: '';
+  background: transparent url(https://cdn.shopify.com/s/files/1/0885/0463/1611/files/6-pack-blue.png?v=1722166282) no-repeat center/contain;
+  width: 25%;
+  height: 25%;
+  top: 10px;
+  left: 10px
+}
+
+.card-wrapper:hover .six-pack-badge::after {
+  animation: shake 1.5s;
+}
+
 .gradient {
   background: rgb(var(--color-background));
   background: var(--gradient-background);

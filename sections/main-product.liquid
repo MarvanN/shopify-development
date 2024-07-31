@@ -1,3 +1,24 @@
+{% if product.metafields.alert.show_alert == true %}
+
+<script src="{{ 'sweetAlert2.js' | asset_url }}" defer="defer"></script>
+
+<script type="module" >
+  Swal.fire({
+    title: "{{  product.metafields.alert.alert_title }}",
+    html: `{{  product.metafields.alert.alert_description | metafield_tag }}`,
+    showConfirmButton: false,
+    background: '#e8ffe7'
+  });
+</script>
+
+<style>
+  div:where(.swal2-container) div:where(.swal2-popup) {
+    font-size: 1.5rem;
+  }
+</style>
+
+{% endif %}
+
 <product-info
   id="MainProduct-{{ section.id }}"
   class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
