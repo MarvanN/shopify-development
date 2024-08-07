@@ -482,6 +482,46 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+
+                <div class="product-form__input">
+                  <label class="form__label" for="custom-name">Your name</label>
+                  <input
+                    class="field__input"
+                    required
+                    type="text"
+                    id="custom-name"
+                    form="{{product_form_id}}"
+                    name="properties[Your Name]"
+                    style="border: 1px solid grey;"
+                  >
+                </div>
+                <div class="product-form__input">
+                  <label class="form__label" for="custom-coating">Coating</label>
+                  <select
+                    class="select__select"
+                    id="custom-coating"
+                    form="{{product_form_id}}"
+                    name="properties[Coating]"
+                    style="border: 1px solid grey;"
+                  >
+                    <option value="Natural">Natural</option>
+                    <option value="Mosaic">Mosaic</option>
+                  </select>
+                </div>
+                <div style="display:flex">
+                  <label class="form__label" for="custom-gift">Wrap as a gift</label>
+                  <input
+                    type="checkbox"
+                    value="yes"
+                    id="custom-gift"
+                    form="{{product_form_id}}"
+                    name="properties[Wrap as a gift]"
+                  >
+                </div>
+                <div>
+                  <label class="form__label" for="custom-file">Your Photo</label>
+                  <input type="file" id="custom-file" form="{{product_form_id}}" name="properties[Your Photo]">
+                </div>
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
