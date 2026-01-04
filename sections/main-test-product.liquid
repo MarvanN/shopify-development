@@ -1,8 +1,29 @@
-<h1>Hello this is from the section file.</h1>
+<h1>{{ product.title }}</h1>
+
+<img src="{{ product.featured_image |  img_url: '300x' }}">
+
+{% if section.settings['show-review'] %}
+  <h4>⭐⭐⭐⭐⭐</h4>
+{% endif %}
+
+<h4>{{ section.settings['tax-notice'] }}</h4>
 
 {% schema %}
 {
-  "name": "Test Product",
-  "settings": []
+  "name": "Main Test Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show-review",
+      "default": false,
+      "label": "To show the review"
+    },
+    {
+      "type": "text",
+      "id": "tax-notice",
+      "default": "Enter tax notice",
+      "label": "Tax Notice"
+    }
+  ]
 }
 {% endschema %}

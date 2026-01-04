@@ -56,8 +56,30 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
-  {%- endstyle -%}
 
+    /* css for variant picker and quantity selector in single line */
+    @media screen and (max-width: 750px) {
+      /* make adjacent variant picker + quantity appear on one line */
+      #ProductInfo-{{ section.id }} variant-selects,
+      #ProductInfo-{{ section.id }} .product-form__input.product-form__quantity {
+        display: inline-flex;
+        flex-direction: column;
+        vertical-align: top;
+      }
+
+      /* give variant picker the remaining width and keep quantity a fixed width */
+      #ProductInfo-{{ section.id }} variant-selects {
+        width: calc(100% - 190px);
+        min-width: 0;
+      }
+
+      #ProductInfo-{{ section.id }} .product-form__input.product-form__quantity {
+        width: 142px;
+        margin-left: 1rem;
+      }
+    }
+    /* end css for variant picker and quantity selector in single line */
+  {%- endstyle -%}
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
@@ -482,6 +504,12 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+              {%- when 'variant_picker_with_image' -%}
+                {% render 'product-variant-picker-with-image',
+                  product: product,
+                  block: block,
+                  product_form_id: product_form_id
+                %}
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
@@ -908,6 +936,11 @@
           "default": "circle"
         }
       ]
+    },
+    {
+      "type": "variant_picker_with_image",
+      "name": "Variant Picker With Image",
+      "limit": 1
     },
     {
       "type": "buy_buttons",

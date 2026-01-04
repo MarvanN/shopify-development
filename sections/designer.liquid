@@ -1,0 +1,24 @@
+{% for designer in shop.metaobjects.designer.values %}
+  <div class="page-width">
+    <div class="image-with-text__media image-with-text__media">
+      <img src="{{ designer.photo | img_url: '500x' }}"></img>
+    </div>
+    <div id="ImageWithText" class="image-with-text__content image-with-text__content">
+      <h2 class="image-with-text__heading inline-richtext">{{ designer.name }}</h2>
+      <p class="image-with-text__text image-with-text__text--caption">{{ designer.description }}</p>
+      <a href="{{ designer.website }}">See all the projects</a>
+    </div>
+  </div>
+{% endfor %}
+
+{% schema %}
+{
+  "name": "Designer",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Designer"
+    }
+  ]
+}
+{% endschema %}

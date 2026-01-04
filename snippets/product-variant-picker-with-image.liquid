@@ -1,0 +1,132 @@
+{% if product.images.size > 1 and product.options_with_values[0].name == 'Color' %}
+  <ul class="product-single__thumbnails grid grid--uniform" id="ProductThumbs">
+    {% case product.images.size %}
+      {% when 2 %}
+        {% assign thumbnail_width = 'grid--2-col' %}
+      {% when 4 %}
+        {% assign thumbnail_width = 'grid--4-col' %}
+      {% else %}
+        {% assign thumbnail_width = 'grid--3-col' %}
+    {% endcase %}
+
+    {% for image in product.images %}
+      <li class="custom-grid__item {{ thumbnail_width }} product-variant-image">
+        {% for variant in image.variants %}
+          {%- comment -%} build comma-separated option value ids for this variant {%- endcomment -%}
+          {%- capture option_value_ids -%}{%- endcapture -%}
+          {%- for option in product.options_with_values -%}
+            {%- assign variant_option_text = variant.options[forloop.index0] -%}
+            {%- for opt_value in option.values -%}
+              {%- if opt_value == variant_option_text -%}
+                {%- capture option_value_ids -%}{{ option_value_ids }}{{ opt_value.id }}, {%- endcapture -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+
+          <button
+            type="button"
+            class="variant-select-button"
+            data-variant-id="{{ variant.id }}"
+            data-option-value-ids="{{ option_value_ids }}"
+            aria-label="{{ 'products.product.select_variant' | t }} {{ variant.title }}"
+          >
+            <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
+          </button>
+          <div class="text-center">
+            <strong>{{ variant.title }}</strong>
+          </div>
+
+          {% if variant.inventory_quantity == 0 %}
+            <a href="{{ variant.url }}"
+              ><img
+                class="sold-out-variant"
+                src="https://cdn.shopify.com/s/files/1/0423/8632/5666/files/sold--out-sample---1.png?v=1676023162"
+              >
+            </a>
+            {% comment %} <span class="sold-out-variant"><span>{{ 'products.product.sold_out' | t }}</span></span> {% endcomment %}
+          {% endif %}
+        {% endfor %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<script>
+  (function () {
+    function closestPoly(el, selector) {
+      while (el && el !== document) {
+        if (el.matches && el.matches(selector)) return el;
+        el = el.parentElement;
+      }
+      return null;
+    }
+    function triggerEvent(el, name) {
+      try {
+        el.dispatchEvent(new Event(name, { bubbles: true, cancelable: true }));
+      } catch (e) {
+        var evt = document.createEvent('Event');
+        evt.initEvent(name, true, false);
+        el.dispatchEvent(evt);
+      }
+    }
+    function dispatchInputAndChange(el) {
+      triggerEvent(el, 'input');
+      triggerEvent(el, 'change');
+    }
+    document.addEventListener('click', function (e) {
+      var target = e.target || (window.event && window.event.srcElement);
+      var btn =
+        (target.closest && target.closest('.variant-select-button')) || closestPoly(target, '.variant-select-button');
+      if (!btn) return;
+      var productInfo =
+        (btn.closest &&
+          (btn.closest('product-info') || btn.closest('.product-info') || btn.closest('[data-product-info]'))) ||
+        closestPoly(btn, 'product-info') ||
+        closestPoly(btn, '.product-info') ||
+        closestPoly(btn, '[data-product-info]') ||
+        document;
+      var raw = '';
+      if (btn.getAttribute) {
+        raw = btn.getAttribute('data-option-value-ids') || '';
+      } else if (btn.dataset && typeof btn.dataset.optionValueIds !== 'undefined') {
+        raw = btn.dataset.optionValueIds;
+      }
+      var ids = raw
+        .split(',')
+        .map(function (s) {
+          return (s || '').trim();
+        })
+        .filter(Boolean);
+      if (!ids.length) return;
+      ids.forEach(function (id) {
+        var el = productInfo.querySelector('[data-option-value-id="' + id + '"]');
+        if (!el) return;
+        var tag = (el.tagName && el.tagName.toUpperCase()) || '';
+        if (tag === 'OPTION') {
+          var select = el.parentElement;
+          if (!select) return;
+          for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i] === el) {
+              select.selectedIndex = i;
+              select.options[i].selected = true;
+            } else {
+              select.options[i].selected = false;
+            }
+          }
+          try {
+            select.value = el.value || el.getAttribute('value') || select.options[select.selectedIndex].value;
+          } catch (err) {}
+          dispatchInputAndChange(select);
+        } else if (tag === 'INPUT' && el.type === 'radio') {
+          el.checked = true;
+          dispatchInputAndChange(el);
+        } else {
+          try {
+            el.checked = true;
+          } catch (err) {}
+          dispatchInputAndChange(el);
+        }
+      });
+    });
+  })();
+</script>
